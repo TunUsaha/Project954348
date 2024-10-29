@@ -1,4 +1,7 @@
 <?php
+
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
@@ -9,13 +12,19 @@ use App\Http\Controllers\LoginController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RegisterController;
 
 // หน้าแรก
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Route::get('/about', [AboutController::class, 'index'])->name('about');
+
+Route::get('/invoices/{order}/download', [InvoiceController::class, 'downloadPDF'])->name('invoices.download');
+
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 
+Route::get('/invoices/{order}/download', [InvoiceController::class, 'downloadPDF'])->name('invoices.download');
 
 Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
 Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
@@ -24,7 +33,7 @@ Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear')
 
 
 Route::post('/products/{product}/purchase', [InvoiceController::class, 'createInvoice'])->name('products.purchase');
-Route::get('/invoice/{invoice}', [InvoiceController::class, 'show'])->name('invoice.show');
+Route::get('/invoices/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
 
 
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
@@ -45,24 +54,21 @@ Route::prefix('products')->name('products.')->group(function () {
     Route::delete('/{productCode}/remove-shop/{shopCode}', [ProductController::class, 'removeShop']);
 });
 
+// Authentication Routes
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'authenticate']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// ลิงก์เข้าสู่ระบบผ่าน Google
-Route::get('/login/google', function () {
-    return Socialite::driver('google')->redirect();
-});
-Route::get('/login/google/callback', [LoginController::class, 'handleGoogleCallback']);
+// Registration Routes
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
 
-// ลิงก์เข้าสู่ระบบผ่าน Facebook
-Route::get('/login/facebook', function () {
-    return Socialite::driver('facebook')->redirect();
-});
-Route::get('/login/facebook/callback', [LoginController::class, 'handleFacebookCallback']);
+// Social Authentication Routes
+Route::get('/auth/google', [LoginController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback']);
 
-// ลิงก์เข้าสู่ระบบผ่าน GitHub
-Route::get('/login/github', function () {
-    return Socialite::driver('github')->redirect();
-});
-Route::get('/login/github/callback', [LoginController::class, 'handleGithubCallback']);
+Route::get('/auth/github', [LoginController::class, 'redirectToGithub'])->name('login.github');
+Route::get('/auth/github/callback', [LoginController::class, 'handleGithubCallback']);
 
 // กลุ่มเส้นทางที่มีการตรวจสอบสิทธิ์
 Route::middleware([

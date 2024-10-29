@@ -5,19 +5,7 @@
 @section('content')
     <div class="content-wrapper">
         <h1 class="page-title">Category List</h1>
-        <form action="{{ route('categories.list') }}" method="get" class="search-form">
-            <div class="search-container">
-                <label class="app-inp-search">
-                    Search
-                    <input type="text" name="term" value="{{ $search['term'] ?? '' }}" class="search-input"
-                        placeholder="Search by code, or name" />
-                </label>
-            </div>
-            <div class="button-group">
-                <button type="submit" class="primary-button">Search</button>
-                <a href="{{ route('categories.list') }}" class="secondary-button">Clear</a>
-            </div>
-        </form>
+        
         @can('create', \App\Models\category::class)
         <a href="{{ route('categories.create-form') }}" class="new-product-button">New Category</a>
         @endcan

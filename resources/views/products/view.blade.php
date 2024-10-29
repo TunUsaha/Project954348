@@ -5,21 +5,7 @@
 @section('content')
     <div class="container mx-auto p-8">
         @if (isset($product))
-            <div class="product-header flex justify-between items-center mb-8">
-                <h1 class="text-5xl font-bold text-gray-900">{{ $product->name }}</h1>
-                <div class="product-actions flex items-center">
-                    @can('update', \App\Models\Product::class)
-                        <a href="{{ route('products.edit-form', $product->code) }}" class="primary-button ml-4">Edit Product</a>
-                    @endcan
-                    @can('delete', \App\Models\Product::class)
-                        <form id="deleteForm" action="{{ route('products.delete', $product->code) }}" method="post" class="inline-block ml-4">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="delete-button" onclick="showConfirmation()">Delete Product</button>
-                        </form>
-                    @endcan
-                </div>
-            </div>
+        <h1 class="text-5xl font-bold text-gray-900">{{ $product->name }}</h1>
 
             <!-- Confirmation Modal -->
             <div id="confirmationModal" class="modal hidden fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
@@ -42,7 +28,7 @@
             </div>
 
             <!-- Product Details Section -->
-            <div class="details-table bg-white rounded-lg shadow p-6 mb-10">
+            <div>
                 <div class="details-container">
                     <p class="text-lg font-medium text-gray-700"><strong>Code:</strong> {{ $product->code }}</p>
                     <p class="text-lg font-medium text-gray-700"><strong>Category:</strong> {{ $product->category->name }}</p>
@@ -50,12 +36,27 @@
                     <p class="text-lg font-medium text-gray-700"><strong>Description:</strong> {!! nl2br(e($product->description)) !!}</p>
                 </div>
             </div>
-
-            <!-- Buy Button Section -->
-            <div class="buy-section mb-10">
-                <button type="submit" class="buy-button bg-green-600 text-white px-6 py-2 rounded-lg shadow-md transition-colors duration-200 hover:bg-green-500">Buy Now</button>
+           
             </div>
-
+            
+            <div class="product-actions flex items-center">
+                    @can('update', \App\Models\Product::class)
+                        <a href="{{ route('products.edit-form', $product->code) }}" class="primary-button ml-4">Edit Product</a>
+                    @endcan
+            <!-- Buy Button Section -->
+           
+ <div class="product-header flex justify-between items-center mb-8">    
+                    @can('delete', \App\Models\Product::class)
+                        <form id="deleteForm" action="{{ route('products.delete', $product->code) }}" method="post" class="inline-block ml-4">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" class="delete-button" onclick="showConfirmation()">Delete Product</button>
+                        </form>
+                    @endcan
+                </div>
+                <div class="buy-section mb-10">
+    <button onclick="checkStockAndRedirect({{ $product->stock }}, '{{ route('invoices.show', $product->code) }}')" class="buy-button bg-green-600 text-white px-6 py-2 rounded-lg shadow-md transition-colors duration-200 hover:bg-green-500">Buy Now</button>
+</div>
             <!-- Back to Products List Button -->
             <div class="button-group">
                 <a href="{{ route('products.list') }}" class="go-back-button bg-gray-800 text-white px-6 py-2 rounded-lg shadow-md transition-colors duration-200 hover:bg-gray-700">Back to Products List</a>

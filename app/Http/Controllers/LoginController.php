@@ -5,83 +5,142 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Psr\Http\Message\ServerRequestInterface;
+use Illuminate\Http\RedirectResponse;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
-    function showLoginForm(): View
+    public function showLoginForm(): View
     {
         return view('logins.form');
     }
 
-    function logout(): RedirectResponse
+    public function logout(): RedirectResponse
     {
         Auth::logout();
         session()->invalidate();
-
-        // regenerate CSRF token
         session()->regenerateToken();
-
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'You have been logged out successfully.');
     }
 
-    public function authenticate(ServerRequestInterface $request): RedirectResponse
+    public function authenticate(Request $request): RedirectResponse
     {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        // get credentials from user.
-        $data = $request->getParsedBody();
-        $credentials = [
-            'email' => $data['email'],
-            'password' => $data['password'],
-        ];
+        $credentials = $request->only('email', 'password');
 
-        // authenticate by using method attempt()
         if (Auth::attempt($credentials)) {
-            // regenerate the new session ID
             session()->regenerate();
+            return redirect()->intended(route('welcome'));
+        }
 
-            // redirect to the requested URL or to route products.list if does not specify
-            return redirect()->intended(route('products.list'));
-        } else {
-            // if cannot authenticate redirect back to loginForm with error message.
-            return redirect()->back()->withErrors([
-                'credentials' => 'The provided credentials do not match our records.',
-            ]);
+        return redirect()->back()->withErrors([
+            'credentials' => 'The provided credentials do not match our records.',
+        ]);
+    }
+
+    public function redirectToGoogle(): RedirectResponse
+    {
+        try {
+            return Socialite::driver('google')->redirect(['prompt' => 'select_account']);
+        } catch (Exception $e) {
+            Log::error('Google redirect failed: ' . $e->getMessage());
+            return redirect()->route('login')->with('error', 'Unable to connect to Google. Please try again.');
         }
     }
 
     public function handleGoogleCallback()
-{
-    $user = Socialite::driver('google')->user();
-    // search user in database
-    $existingUser = User::where('email', $user->getEmail())->first();
-    if ($existingUser) {
-        // user exist, login
-        Auth::login($existingUser);
-    } else {
-        // new user, create new user
-        $newUser = User::create([
-            'name' => $user->getName(),
-            'email' => $user->getEmail(),
-            'password' => Hash::make(uniqid()), // generate random password
-        ]);
-        Auth::login($newUser);
+    {
+        $googleUser = Socialite::driver('google')->user();
+        try {
+
+            $user = User::where('email', $googleUser->getEmail())->first();
+
+            if (!$user) {
+
+                $user = User::create([
+                    'name' => $googleUser->getName(),
+                    'email' => $googleUser->getEmail(),
+                    'password' => Hash::make(uniqid()),
+                    'role' => 'user',
+                ]);
+            }
+
+
+            Auth::login($user, true);
+
+            return redirect()->to('/welcome');
+        } catch (Exception $e) {
+            Log::error('Google login failed: ' . $e->getMessage());
+
+            // Return user-friendly error message
+            return redirect()->route('register')
+                ->with('error', 'Unable to login with Google. Please check your internet connection and try again.');
+        }
     }
-    return redirect()->intended(route('products.list'));
-}
 
-public function handleFacebookCallback()
-{
-    $user = Socialite::driver('facebook')->user();
-}
+    public function redirectToGithub(): RedirectResponse
+    {
+        try {
+            return Socialite::driver('github')->redirect();
+        } catch (Exception $e) {
+            Log::error('GitHub redirect failed: ' . $e->getMessage());
+            return redirect()->route('login')->with('error', 'Unable to connect to GitHub. Please try again.');
+        }
+    }
 
-public function handleGithubCallback()
-{
-    $user = Socialite::driver('github')->user();
-}
+    public function handleGithubCallback(): RedirectResponse
+    {
+        try {
+            $socialUser = Socialite::driver('github')->user();
+            $user = $this->handleSocialLogin($socialUser, 'github');
 
+            return redirect()->intended(route('welcome'))->with('success', 'Successfully logged in with GitHub!');
+        } catch (Exception $e) {
+            Log::error('GitHub callback failed: ' . $e->getMessage());
+            return redirect()->route('login')->with('error', 'GitHub authentication failed. Please try again.');
+        }
+    }
+
+    private function handleSocialLogin($socialUser, $provider): User
+    {
+        Log::info($provider . ' user data received', [
+            'email' => $socialUser->getEmail(),
+            'name' => $socialUser->getName(),
+            'id' => $socialUser->getId()
+        ]);
+
+        $user = User::where($provider . '_id', $socialUser->getId())
+            ->orWhere('email', $socialUser->getEmail())
+            ->first();
+
+        if (!$user) {
+            $user = User::create([
+                'name' => $socialUser->getName() ?? $socialUser->getNickname(),
+                'email' => $socialUser->getEmail(),
+                $provider . '_id' => $socialUser->getId(),
+                'avatar' => $socialUser->getAvatar(),
+                'password' => Hash::make(Str::random(24)),
+                'email_verified_at' => now(),
+            ]);
+        } else {
+            $user->update([
+                $provider . '_id' => $socialUser->getId(),
+                'avatar' => $socialUser->getAvatar(),
+            ]);
+        }
+
+        Auth::login($user, true);
+        Log::info($provider . ' login successful', ['user_id' => $user->id]);
+
+        return $user;
+    }
 }
