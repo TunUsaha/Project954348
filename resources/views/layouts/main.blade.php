@@ -255,7 +255,6 @@
             @yield('content')
         </div>
     </main>
-
     <footer>
         <div class="container">
             &#xA9; {{ date('Y') }} Project 954348 Web Programming.
