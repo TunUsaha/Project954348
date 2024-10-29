@@ -82,14 +82,11 @@
                 <a href="/login/google" class="social-button google">
                     <i class="fab fa-google mx-auto"></i>
                 </a>
-                <a href="/login/facebook" class="social-button facebook">
-                    <i class="fab fa-facebook" ></i>
-                </a>
+
                 <a href="/login/github" class="social-button github">
                     <i class="fab fa-github"></i>
                 </a>
             </div>
-
 
         </div>
     </div>

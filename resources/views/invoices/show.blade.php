@@ -1,5 +1,5 @@
 
-use App\Models\Product;
+
 
 
 <!DOCTYPE html>
