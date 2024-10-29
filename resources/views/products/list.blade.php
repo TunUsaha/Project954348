@@ -25,9 +25,9 @@
                             {{-- {{ dd($product->image_url ?? asset('images/products/1.jpeg')) }} --}}
 
                            <img src="{{ $product->image_url ?: asset('images/products/1.jpeg') }}" alt="{{ $product->name }}">
-
-                          
                         </div>
+                        <form action="{{ route('products.list') }}" method="get" class="search-form">
+
                         <div class="product-info">
                             <h3 class="product-name">{{ $product->name }}</h3>
                             <p class="product-category">

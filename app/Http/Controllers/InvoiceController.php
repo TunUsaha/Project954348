@@ -1,32 +1,31 @@
+<?php
+
+
+
+
 namespace App\Http\Controllers;
 
-use App\Models\Invoice;
-use App\Models\Product;
+use App\Models\Product; // Add this line if you haven't already
+use App\Models\Order; // Adjust to your order model
+use PDF;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
-    public function createInvoice(Request $request, Product $product)
+    public function downloadPDF(Order $order)
     {
-        // สร้างใบแจ้งหนี้ใหม่
-        $invoice = Invoice::create([
-            'product_id' => $product->id,
-            'user_id' => auth()->id(),
-            'amount' => $product->price,
-            'status' => 'pending',
-        ]);
-
-        // เปลี่ยนเส้นทางไปยังหน้าที่แสดงใบแจ้งหนี้
-        return redirect()->route('invoice.show', $invoice);
-    }
-
-    public function show(Invoice $invoice)
-    {
-        // ตรวจสอบสิทธิ์การเข้าถึงใบแจ้งหนี้ (เฉพาะเจ้าของเท่านั้น)
-        if ($invoice->user_id !== auth()->id()) {
-            abort(403);
+        // Check if the authenticated user owns this order
+        if ($order->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
         }
-
-        return view('invoices.show', compact('invoice'));
+    
+        // Load the PDF view with order data
+        return view('invoices.pdf', compact('order')); // Pass $order to the view
     }
+    
+    public function show(Product $product)
+    {
+        return view('invoices.show', compact('product'));
+    }
+
 }

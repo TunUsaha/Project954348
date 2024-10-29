@@ -45,7 +45,7 @@ class LoginController extends Controller
             session()->regenerate();
 
             // redirect to the requested URL or to route products.list if does not specify
-            return redirect()->intended(route('products.list'));
+            return redirect()->intended(route('welcome'));
         } else {
             // if cannot authenticate redirect back to loginForm with error message.
             return redirect()->back()->withErrors([
@@ -71,7 +71,7 @@ class LoginController extends Controller
         ]);
         Auth::login($newUser);
     }
-    return redirect()->intended(route('products.list'));
+    return redirect()->intended(route('welcome'));
 }
 
 public function handleFacebookCallback()

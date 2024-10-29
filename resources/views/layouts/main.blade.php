@@ -8,6 +8,7 @@
     <link rel="icon" href="{{ asset('icon/logo.svg') }}" type="image/svg+xml">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
+
     <style>
         /* General styling */
         body {
@@ -186,32 +187,15 @@
             <nav>
                 <ul>
                     <li><a href="{{ route('products.list') }}" class="nav-link">Store</a></li>
-                    <li class="dropdown">
-                        <a href="{{ route('welcome') }}" class="nav-link">Mac</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Macpine Air</a></li>
-                            <li><a href="#">Macpine Pro</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="{{ route('welcome') }}" class="nav-link">Pinepad</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Pinepad</a></li>
-                            <li><a href="#">Pinepad Mini</a></li>
-                            <li><a href="#">Pinepad Pro</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="nav-link">Watch</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Pineapple Watch</a></li>
-                            <li><a href="#">Pineapple Watch SE</a></li>
-                            <li><a href="#">Pineapple Watch Ultra</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="{{ route('welcome') }}" class="nav-link">Contact</a></li>
+
                     <li>
-                        <input type="text" class="input" placeholder="Search"> <span>Search</span>
+                    <a href="{{ route('about') }}"class="nav-link" >About Pineapple</a></li>
+
+                    <li><a href="{{ route('contact') }}" class="nav-link">WE Contact</a></li>
+
+
+                    <li>
+                    
                     </li>
                     <li>
                         <div class="user-icon" onclick="toggleDropdown()">
@@ -255,6 +239,7 @@
             @yield('content')
         </div>
     </main>
+
     <footer>
         <div class="container">
             &#xA9; {{ date('Y') }} Project 954348 Web Programming.

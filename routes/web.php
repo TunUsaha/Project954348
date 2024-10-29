@@ -1,4 +1,7 @@
 <?php
+
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
@@ -11,11 +14,18 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 
 // หน้าแรก
-Route::get('/', function () {
-    return view('welcome');
-});
 
 
+
+Route::get('/about', [AboutController::class, 'index'])->name('about');
+
+Route::get('/invoices/{order}/download', [InvoiceController::class, 'downloadPDF'])->name('invoices.download');
+
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+
+
+Route::get('/invoices/{order}/download', [InvoiceController::class, 'downloadPDF'])->name('invoices.download');
 
 Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
 Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
@@ -24,7 +34,7 @@ Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear')
 
 
 Route::post('/products/{product}/purchase', [InvoiceController::class, 'createInvoice'])->name('products.purchase');
-Route::get('/invoice/{invoice}', [InvoiceController::class, 'show'])->name('invoice.show');
+Route::get('/invoices/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
 
 
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
