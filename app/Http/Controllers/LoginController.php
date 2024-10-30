@@ -39,7 +39,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             session()->regenerate();
-            return redirect()->intended(route('welcome'));
+            return redirect()->intended('/');
         }
 
         return redirect()->back()->withErrors([
@@ -48,49 +48,37 @@ class LoginController extends Controller
     }
 
     public function redirectToGoogle(): RedirectResponse
-    {
-        try {
-            return Socialite::driver('google')->redirect(['prompt' => 'select_account']);
-        } catch (Exception $e) {
-            Log::error('Google redirect failed: ' . $e->getMessage());
-            return redirect()->route('login')->with('error', 'Unable to connect to Google. Please try again.');
-        }
+{
+    Log::info('Redirecting to Google for authentication');
+    try {
+        // Redirect to Google with the option to select account
+        return Socialite::driver('google')->redirect(['prompt' => 'select_account']);
+    } catch (Exception $e) {
+        // Log the error if the redirect fails
+        Log::error('Google redirect failed: ' . $e->getMessage());
+        return redirect()->route('login')->with('error', 'Unable to connect to Google. Please try again.');
     }
-
-    public function handleGoogleCallback()
-    {
-        $googleUser = Socialite::driver('google')->user();
-        try {
-
-            $user = User::where('email', $googleUser->getEmail())->first();
-
-            if (!$user) {
-
-                $user = User::create([
-                    'name' => $googleUser->getName(),
-                    'email' => $googleUser->getEmail(),
-                    'password' => Hash::make(uniqid()),
-                    'role' => 'user',
-                ]);
-            }
+}
 
 
-            Auth::login($user, true);
 
-            return redirect()->to('/welcome');
-        } catch (Exception $e) {
-            Log::error('Google login failed: ' . $e->getMessage());
+public function handleGoogleCallback(): RedirectResponse
+{
+    try {
+        $socialUser = Socialite::driver('google')->user();
+        $user = $this->handleSocialLogin($socialUser, 'google');
 
-            // Return user-friendly error message
-            return redirect()->route('register')
-                ->with('error', 'Unable to login with Google. Please check your internet connection and try again.');
-        }
+        return redirect()->intended('/')->with('success', 'Successfully logged in with Google!');
+    } catch (Exception $e) {
+        Log::error('Google callback failed: ' . $e->getMessage());
+        return redirect()->route('login')->with('error', 'Google authentication failed. Please try again.');
     }
+}
 
     public function redirectToGithub(): RedirectResponse
     {
         try {
-            return Socialite::driver('github')->redirect();
+            return Socialite::driver('github')->redirect(['prompt' => 'select_account']);
         } catch (Exception $e) {
             Log::error('GitHub redirect failed: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'Unable to connect to GitHub. Please try again.');
@@ -103,7 +91,7 @@ class LoginController extends Controller
             $socialUser = Socialite::driver('github')->user();
             $user = $this->handleSocialLogin($socialUser, 'github');
 
-            return redirect()->intended(route('welcome'))->with('success', 'Successfully logged in with GitHub!');
+            return redirect()->intended('/')->with('success', 'Successfully logged in with GitHub!');
         } catch (Exception $e) {
             Log::error('GitHub callback failed: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'GitHub authentication failed. Please try again.');

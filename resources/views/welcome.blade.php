@@ -14,10 +14,9 @@
 <body class="bg-gray-100 text-gray-800 antialiased">
     <!-- Hero Section with Gradient Background and Centered Content -->
     <section class="hero h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600">
-        <div class="text-center z-10 p-10 bg-white bg-opacity-90 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out max-w-xl">
+        <div class="welcome-title">
             <h1 class="text-6xl font-bold text-gray-900 mb-4">Welcome to Pineapple</h1>
             <p class="text-2xl text-gray-700 mb-8">Premium products crafted with elegance and performance in mind.</p>
-            <a href="{{ route('products.list') }}" class="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold text-lg px-12 py-4 rounded-full hover:from-indigo-600 hover:to-blue-500 transition-all duration-300 shadow-lg transform hover:scale-105">Explore Our Products</a>
         </div>
     </section>
 
@@ -47,7 +46,7 @@
                     </ul>
 
                     <!-- Call-to-Action Button -->
-                    <a href="{{ route('products.list') }}" class="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium text-lg px-10 py-4 rounded-full hover:from-indigo-600 hover:to-blue-500 transition-all duration-300 shadow-lg transform hover:scale-105">Shop MacBook</a>
+                    <a href="{{ route('products.list') }}" class="mt-8 inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium text-lg px-10 py-4 rounded-full hover:from-indigo-600 hover:to-blue-500 transition-all duration-300 shadow-lg transform hover:scale-105">Shop MacBook</a>
                 </div>
             </div>
         </div>

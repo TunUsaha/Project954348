@@ -1109,7 +1109,7 @@ input.input {
     padding: 15px;
 }
 
-/* 
+/*
 Home style */
  /* Additional CSS for Animations */
  @keyframes fadeIn {
@@ -1219,4 +1219,212 @@ nav ul {
     height: 200px;
     object-fit: cover;
     border-bottom: 1px solid #e0e0e0;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    color: #fff;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    color: #e5e7eb;
+}
+
+.hero a {
+    background: linear-gradient(90deg, #4f46e5, #6d28d9);
+    color: #fff;
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.hero a:hover {
+    background: linear-gradient(90deg, #6d28d9, #4f46e5);
+    transform: scale(1.05);
+}
+
+/* MacBook Details Section */
+.macbook-details {
+    background-color: #fafafa;
+    padding: 3rem 0;
+    color: #333;
+}
+
+.macbook-details h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 1rem;
+}
+
+.macbook-details h3 {
+    font-size: 2rem;
+    font-weight: 500;
+    color: #4a4a4a;
+    margin-bottom: 1rem;
+}
+
+.macbook-details p {
+    font-size: 1.125rem;
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+.macbook-details ul {
+    list-style: none;
+    padding: 0;
+}
+
+.macbook-details ul li {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.macbook-details a {
+    background: linear-gradient(90deg, #4f46e5, #6d28d9);
+    color: #fff;
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.macbook-details a:hover {
+    background: linear-gradient(90deg, #6d28d9, #4f46e5);
+    transform: scale(1.05);
+}
+
+/* Call-to-Action Section */
+.cta-section {
+    background-color: #333;
+    color: #fff;
+    padding: 3rem 0;
+}
+
+.cta-section a {
+    background-color: #fff;
+    color: #333;
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.cta-section a:hover {
+    background-color: #e5e7eb;
+    transform: scale(1.05);
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .macbook-details h2 {
+        font-size: 2rem;
+    }
+
+    .macbook-details h3 {
+        font-size: 1.75rem;
+    }
+}
+
+/* Main container styling */
+.contact-container {
+    max-width: 700px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Title and subtitle styling */
+.contact-title {
+    font-size: 2.5rem;
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.contact-subtitle {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Form styling */
+.contact-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.contact-form label {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.contact-form textarea {
+    resize: vertical;
+}
+
+/* Success alert styling */
+.contact-alert {
+    font-size: 1rem;
+    color: #155724;
+    background-color: #d4edda;
+    padding: 0.75rem;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Submit button styling */
+.contact-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.contact-btn:hover {
+    background-color: #0056b3;
 }
